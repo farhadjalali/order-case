@@ -1,8 +1,8 @@
 package com.afkl.travel.exercise.controller;
 
 import com.afkl.travel.exercise.entity.Location;
-import com.afkl.travel.exercise.repository.LocationRepository;
 import com.afkl.travel.exercise.exception.NotFoundException;
+import com.afkl.travel.exercise.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,31 +10,31 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/travel/locations")
+@CrossOrigin(origins = "http://localhost:3000")
 public class LocationController {
 
-    private final LocationRepository locationRepository;
+    private final LocationService locationService;
 
     @Autowired
-    public LocationController(LocationRepository locationRepository) {
-        this.locationRepository = locationRepository;
+    public LocationController(LocationService locationService) {
+        this.locationService = locationService;
     }
 
     @GetMapping("")
     public List<Location> getLocations() {
-        return locationRepository.findAll();
+        return locationService.getLocations();
     }
 
     @GetMapping("/{id}")
     public Location getLocationById(@PathVariable("id") Integer id) throws NotFoundException {
-        return locationRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Location not found with id: " + id));
+        return getLocationById(id);
     }
 
     // Other methods...
 
     @PostMapping("")
     public Location createLocation(@RequestBody Location location) {
-        return locationRepository.save(location);
+        return locationService.createLocation(location);
     }
 
     @PutMapping("/{id}")
@@ -42,26 +42,11 @@ public class LocationController {
             @PathVariable("id") Integer id,
             @RequestBody Location locationDetails
     ) throws NotFoundException {
-        Location location = locationRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Location not found with id: " + id));
-
-        // Update the location details
-        location.setCode(locationDetails.getCode());
-        location.setName(locationDetails.getName());
-        location.setType(locationDetails.getType());
-        location.setLatitude(locationDetails.getLatitude());
-        location.setLongitude(locationDetails.getLongitude());
-        location.setDescription(locationDetails.getDescription());
-        location.setParent(locationDetails.getParent());
-
-        return locationRepository.save(location);
+        return locationService.updateLocation(id, locationDetails);
     }
 
     @DeleteMapping("/{id}")
     public void deleteLocation(@PathVariable("id") Integer id) {
-        Location location = locationRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Location not found with id: " + id));
-
-        locationRepository.delete(location);
+        locationService.deleteLocation(id);
     }
 }

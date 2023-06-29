@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class MetricsConfig {
-
     @Bean
     public MeterRegistry meterRegistry() {
         return new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);

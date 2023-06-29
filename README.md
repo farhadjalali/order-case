@@ -81,7 +81,7 @@ Use the client to retrieve and print all airports from the USA (country code is 
 
 ### Bonus points
 
-- dockerize the application
+- dockerize the application (docker build -t order-case .)
 - Provide a unique ID to each request for tracking purposes and have *every* log line include it before the message.
 
 ---

@@ -1,0 +1,19 @@
+---
+# docker-compose up -d
+# docker-compose up --build
+# docker-compose down
+# docker-compose down -v
+
+version: "3.6"
+
+services:
+  order-case:
+    image: order-case:local
+    container_name: order-case
+    build:
+      context: .
+    ports:
+      - 8080:8080
+
+volumes:
+  dbdata:
