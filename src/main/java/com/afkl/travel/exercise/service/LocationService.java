@@ -21,6 +21,9 @@ public class LocationService {
 
     public List<Location> getLocations(String type) {
         switch (type){
+            case "nl-airports":
+                return locationRepository.findRecursiveByTypeAndParentCode( "airport", "NL");
+
             case "us-airports":
             default:
                 return locationRepository.findRecursiveByTypeAndParentCode( "airport", "US");
