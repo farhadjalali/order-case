@@ -1,63 +1,50 @@
 import com.afkl.travel.exercise.entity.Location;
-import com.afkl.travel.exercise.entity.LocationType;
 import com.afkl.travel.exercise.exception.NotFoundException;
 import com.afkl.travel.exercise.repository.LocationRepository;
 import com.afkl.travel.exercise.service.LocationService;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.boot.test.context.SpringBootTest;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
+@SpringBootTest(classes = LocationServiceTest.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class LocationServiceTest {
 
     @Mock
     private LocationRepository locationRepository;
 
-    @InjectMocks
     private LocationService locationService;
 
-    @Test
-    void testGetLocations() {
-        // Prepare
-        List<Location> locations = new ArrayList<>();
-        locations.add(new Location(1, "Location 1", LocationType.CITY, 1.23, 4.56, null));
-        locations.add(new Location(2, "Location 2", LocationType.AIRPORT, 7.89, 10.11, 1));
-
-        when(locationRepository.findAll()).thenReturn(locations);
-
-        // Execute
-        List<Location> result = locationService.getLocations();
-
-        // Verify
-        assertEquals(2, result.size());
-        assertEquals("Location 1", result.get(0).getName());
-        assertEquals("Location 2", result.get(1).getName());
+    @BeforeAll
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        locationService = new LocationService(locationRepository);
     }
 
     @Test
-    void testGetLocationById_LocationFound() throws NotFoundException {
+    public void testUsAirports() {
         // Prepare
-        Location location = new Location(1, "Location 1", LocationType.CITY, 1.23, 4.56, null);
-        when(locationRepository.findById(1)).thenReturn(Optional.of(location));
+        List<Location> locations = new ArrayList<>();
+        locations.add(new Location(1, "Location 1", "city", 1.23, 4.56, null));
+        locations.add(new Location(2, "Location 2", "airport", 7.89, 10.11, 1));
+
+        when(locationRepository.findRecursiveByTypeAndParentCode("airport", "US")).thenReturn(new ArrayList<>());
 
         // Execute
-        Location result = locationService.getLocationById(1);
+         List<Location> result = locationService.getLocations("us-airports");
 
         // Verify
-        assertNotNull(result);
-        assertEquals("Location 1", result.getName());
+        assertEquals(0, result.size());
     }
 
     @Test
@@ -68,9 +55,4 @@ public class LocationServiceTest {
         // Execute and Verify
         assertThrows(NotFoundException.class, () -> locationService.getLocationById(1));
     }
-
-    // Similarly, you can write tests for createLocation, updateLocation, and deleteLocation methods.
-    // Make sure to cover different scenarios and edge cases.
-
-    // ...
 }

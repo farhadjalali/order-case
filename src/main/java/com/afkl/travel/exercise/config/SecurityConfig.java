@@ -24,8 +24,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-            .antMatchers("/actuator/metrics").hasRole("USER")
+            .antMatchers("/actuator/metrics").hasRole("OPS")
+            .antMatchers("/h2-console/**").permitAll()
             .and()
+            .csrf().disable()
             .httpBasic();
+
+        http.headers().frameOptions().disable();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+                .withUser("ops").password("{noop}psw").roles("OPS");
     }
 }

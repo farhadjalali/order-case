@@ -1,27 +1,35 @@
 package com.afkl.travel.exercise.entity;
 
-// Todo: when this syntax?
+import io.micrometer.core.lang.Nullable;
+
 import javax.persistence.*;
 
 @Entity
 public class Location {
-    @Id
-    private int id;
-
     public Location(){
     }
 
-    public Location(int id, String code, LocationType type, double longitude, double latitude, Integer parent) {
+    public Location(int id, String code, String type, Double longitude, Double latitude, Integer parent_id) {
         this.id = id;
         this.code = code;
         this.type = type;
         this.longitude = longitude;
         this.latitude = latitude;
-        this.parent = parent;
+        this.parent_id = parent_id;
     }
 
-    private String code;
+    @Id
+    private int id;
 
+    private String code;
+    private String type;
+    @Nullable
+    private Double latitude;
+    @Nullable
+    private Double longitude;
+    private Integer parent_id;
+
+    // Getter and setter for 'id'
     public int getId() {
         return id;
     }
@@ -29,13 +37,6 @@ public class Location {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    private String name;
-    private LocationType type;
-    private double latitude;
-    private double longitude;
-    private String description;
-    private Integer parent;
 
     // Getter and setter for 'code'
     public String getCode() {
@@ -46,57 +47,39 @@ public class Location {
         this.code = code;
     }
 
-    // Getter and setter for 'name'
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     // Getter and setter for 'type'
-    public LocationType getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(LocationType type) {
+    public void setType(String type) {
         this.type = type;
     }
 
     // Getter and setter for 'latitude'
-    public double getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
     // Getter and setter for 'longitude'
-    public double getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
-    // Getter and setter for 'description'
-    public String getDescription() {
-        return description;
+    // Getter and setter for 'parent id'
+    public Integer getParent_id() {
+        return parent_id;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    // Getter and setter for 'parentCode'
-    public Integer getParent() {
-        return parent;
-    }
-
-    public void setParent(Integer parent) {
-        this.parent = parent;
+    public void setParent_id(Integer parent_id) {
+        this.parent_id = parent_id;
     }
 }

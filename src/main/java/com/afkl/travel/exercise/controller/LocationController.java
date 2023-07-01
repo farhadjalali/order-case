@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/travel/locations")
-@CrossOrigin(origins = "http://localhost:3000")
 public class LocationController {
 
     private final LocationService locationService;
@@ -21,8 +20,8 @@ public class LocationController {
     }
 
     @GetMapping("")
-    public List<Location> getLocations() {
-        return locationService.getLocations();
+    public List<Location> getLocations(@RequestParam("type") String type) {
+        return locationService.getLocations(type);
     }
 
     @GetMapping("/{id}")

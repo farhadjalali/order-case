@@ -19,8 +19,12 @@ public class LocationService {
         this.locationRepository = locationRepository;
     }
 
-    public List<Location> getLocations() {
-        return locationRepository.findAll();
+    public List<Location> getLocations(String type) {
+        switch (type){
+            case "us-airports":
+            default:
+                return locationRepository.findRecursiveByTypeAndParentCode( "airport", "US");
+        }
     }
 
     public Location getLocationById(@PathVariable("id") Integer id) throws NotFoundException {
@@ -41,12 +45,10 @@ public class LocationService {
 
         // Update the location details
         location.setCode(locationDetails.getCode());
-        location.setName(locationDetails.getName());
         location.setType(locationDetails.getType());
         location.setLatitude(locationDetails.getLatitude());
         location.setLongitude(locationDetails.getLongitude());
-        location.setDescription(locationDetails.getDescription());
-        location.setParent(locationDetails.getParent());
+        location.setParent_id(locationDetails.getParent_id());
 
         return locationRepository.save(location);
     }
